@@ -45,8 +45,12 @@ There are several tools online you can use, I'd recommend [Draw.io](https://www.
 
 **HINT:** You do not need to create any data for this prompt. This is a conceptual model only. 
 
+![sql_assignment2_section1a.png](sql_assignment2_section1a.png)
+
 #### Prompt 2
 We want to create employee shifts, splitting up the day into morning and evening. Add this to the ERD.
+
+![sql_assignment2_section1b.png](sql_assignment2_section1b.png)
 
 #### Prompt 3
 The store wants to keep customer addresses. Propose two architectures for the CUSTOMER_ADDRESS table, one that will retain changes, and another that will overwrite. Which is type 1, which is type 2? 
@@ -54,7 +58,33 @@ The store wants to keep customer addresses. Propose two architectures for the CU
 **HINT:** search type 1 vs type 2 slowly changing dimensions. 
 
 ```
-Your answer...
+A table with slowly changing dimensions of type 1 involves overwriting the existing value for a customer's address with the new value. 
+This method does not retain history. In contrast, type 2 of slowly changing dimensions adds a new row for the new value and maintains the 
+existing row for historical and reporting purposes. This impacts the table structure depending on the method chosen.
+
+In general this customer_addresses table, both tables would include the following fields:
+- customer_id
+- unit_number
+- street_number
+- street_name
+- street_type
+- full address
+- city
+- province
+- postal code
+
+Both are valid methods, however, the use-case of including this table into the ERD will determine if we use type 1 or type 2. 
+The bookstore may want to keep a list of historical addresses if issues arise in previously fulfilled orders. Or for analyses related to customer profiles.
+However, keeping these historical addresses will lead to duplicate customer records and could result in incorrectly fulfilling orders if the wrong joins were made.
+
+In the case of type 2 where we retain older addresses for the same customer, we would want to include an additional fields such as date fields to 
+indicate when the address in no longer effective. In using date fields, such as an effective_date and an end_date is another way that the bookstore could be able to
+query for when addresses were added and populate the value of end_date to see if a customer still resides at an address. A value of NULL for the end_date would indicate
+that an address is still valid, while a value populated with a current or past timestamp would indicate that this record does not accurately signify a customer's address.
+
+This would be an additional field that users could query or filter to minimize or elimitate issues with joins.
+
+All in all the use-cases and business needs should be considered when designing this customer_address table.
 ```
 
 ***
